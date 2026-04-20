@@ -15,6 +15,7 @@ import android.bluetooth.BluetoothProfile
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
+import androidx.annotation.RequiresApi
 import com.accessswitch.settings.SettingsRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -54,6 +55,7 @@ enum class BtHidState {
  *
  * **Latency target:** < 150ms from zone tap to Chromebook onKeyEvent
  */
+@RequiresApi(Build.VERSION_CODES.P)
 @AndroidEntryPoint
 class BluetoothHidDeviceService : Service() {
 
