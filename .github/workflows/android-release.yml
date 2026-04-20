@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
-      ACCESSSWITCH_SIGNING_STORE_FILE: ${{ runner.temp }}/accessswitch-release.keystore
+      ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
       ACCESSSWITCH_SIGNING_STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
       ACCESSSWITCH_SIGNING_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
       ACCESSSWITCH_SIGNING_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
@@ -49,20 +49,22 @@ jobs:
         run: chmod +x gradlew
 
       - name: Decode release keystore
-        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+        if: env.ANDROID_KEYSTORE_BASE64 != ''
         shell: bash
         run: |
-          printf '%s' "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > "$ACCESSSWITCH_SIGNING_STORE_FILE"
+          keystore="$RUNNER_TEMP/accessswitch-release.keystore"
+          printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$keystore"
+          echo "ACCESSSWITCH_SIGNING_STORE_FILE=$keystore" >> "$GITHUB_ENV"
 
       - name: Build release artifacts
+        shell: bash
         run: |
-          ./gradlew \
-            assembleRelease \
-            bundleRelease \
-            -PACCESSSWITCH_SIGNING_STORE_FILE="$ACCESSSWITCH_SIGNING_STORE_FILE" \
-            -PACCESSSWITCH_SIGNING_STORE_PASSWORD="$ACCESSSWITCH_SIGNING_STORE_PASSWORD" \
-            -PACCESSSWITCH_SIGNING_KEY_ALIAS="$ACCESSSWITCH_SIGNING_KEY_ALIAS" \
-            -PACCESSSWITCH_SIGNING_KEY_PASSWORD="$ACCESSSWITCH_SIGNING_KEY_PASSWORD"
+          FLAGS=()
+          [ -n "${ACCESSSWITCH_SIGNING_STORE_FILE:-}" ] && FLAGS+=(-PACCESSSWITCH_SIGNING_STORE_FILE="$ACCESSSWITCH_SIGNING_STORE_FILE")
+          [ -n "${ACCESSSWITCH_SIGNING_STORE_PASSWORD:-}" ] && FLAGS+=(-PACCESSSWITCH_SIGNING_STORE_PASSWORD="$ACCESSSWITCH_SIGNING_STORE_PASSWORD")
+          [ -n "${ACCESSSWITCH_SIGNING_KEY_ALIAS:-}" ] && FLAGS+=(-PACCESSSWITCH_SIGNING_KEY_ALIAS="$ACCESSSWITCH_SIGNING_KEY_ALIAS")
+          [ -n "${ACCESSSWITCH_SIGNING_KEY_PASSWORD:-}" ] && FLAGS+=(-PACCESSSWITCH_SIGNING_KEY_PASSWORD="$ACCESSSWITCH_SIGNING_KEY_PASSWORD")
+          ./gradlew assembleRelease bundleRelease "${FLAGS[@]}"
 
       - name: Upload release artifacts
         uses: actions/upload-artifact@v4
