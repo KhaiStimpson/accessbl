@@ -89,7 +89,7 @@ class PhoneControllerTest {
 
     @Test
     fun `buildScanItems returns ringing items on incoming call`() {
-        callStateFlow.value = CallState.Ringing("Alice")
+        callStateFlow.value = CallState.Ringing("Alice", "+1234567890")
         val items = phoneController.buildScanItems()
         assertEquals(2, items.size)
         assertEquals("call_answer", items[0].id)
@@ -119,7 +119,7 @@ class PhoneControllerTest {
 
     @Test
     fun `buildScanItems returns dialing items`() {
-        callStateFlow.value = CallState.Dialing("Charlie")
+        callStateFlow.value = CallState.Dialing("Charlie", "+1112223333")
         val items = phoneController.buildScanItems()
         assertEquals(2, items.size)
         assertEquals("call_status", items[0].id)
@@ -178,7 +178,7 @@ class CallStateTest {
 
     @Test
     fun `Ringing is not in call`() {
-        assertTrue(!CallState.Ringing("Alice").isInCall)
+        assertTrue(!CallState.Ringing("Alice", "+1234567890").isInCall)
     }
 
     @Test
@@ -188,7 +188,7 @@ class CallStateTest {
 
     @Test
     fun `Dialing is in call`() {
-        assertTrue(CallState.Dialing("Charlie").isInCall)
+        assertTrue(CallState.Dialing("Charlie", "+1112223333").isInCall)
     }
 
     @Test
