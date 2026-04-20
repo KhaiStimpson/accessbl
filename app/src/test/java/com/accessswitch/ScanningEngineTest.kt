@@ -67,7 +67,7 @@ class ScanningEngineTest {
     @Test
     fun `setItems starts scanning in auto mode`() = runTest {
         engine.setItems(testItems)
-        testDispatcher.scheduler.advanceUntilIdle()
+        testDispatcher.scheduler.runCurrent()
 
         val state = engine.state.value
         assertTrue(state.isScanning)
@@ -94,7 +94,7 @@ class ScanningEngineTest {
         )
 
         engine.setItems(items)
-        testDispatcher.scheduler.advanceUntilIdle()
+        testDispatcher.scheduler.runCurrent()
 
         engine.onSwitchPressed(SwitchId.SWITCH_1)
         assertTrue(selected)
@@ -129,14 +129,14 @@ class ScanningEngineTest {
     @Test
     fun `pause stops scanning, resume restarts`() = runTest {
         engine.setItems(testItems)
-        testDispatcher.scheduler.advanceUntilIdle()
+        testDispatcher.scheduler.runCurrent()
         assertTrue(engine.state.value.isScanning)
 
         engine.pause()
         assertFalse(engine.state.value.isScanning)
 
         engine.resume()
-        testDispatcher.scheduler.advanceUntilIdle()
+        testDispatcher.scheduler.runCurrent()
         assertTrue(engine.state.value.isScanning)
     }
 
@@ -145,7 +145,7 @@ class ScanningEngineTest {
     @Test
     fun `auto-scan advances through items at interval`() = runTest {
         engine.setItems(testItems)
-        testDispatcher.scheduler.advanceUntilIdle()
+        testDispatcher.scheduler.runCurrent()
         assertEquals(0, engine.state.value.highlightedIndex)
 
         // Advance past one interval
@@ -162,7 +162,7 @@ class ScanningEngineTest {
     @Test
     fun `auto-scan wraps around and increments loop count`() = runTest {
         engine.setItems(testItems)
-        testDispatcher.scheduler.advanceUntilIdle()
+        testDispatcher.scheduler.runCurrent()
 
         // Advance through all 3 items (3 intervals = 3000ms)
         testDispatcher.scheduler.advanceTimeBy(3001)
@@ -228,13 +228,13 @@ class ScanningEngineTest {
         )
 
         engine.setItems(items)
-        testDispatcher.scheduler.advanceUntilIdle()
+        testDispatcher.scheduler.runCurrent()
         assertFalse(engine.state.value.inSubScan)
 
         // Press to enter first row's children
         engine.onSwitchPressed(SwitchId.SWITCH_1)
 
-        testDispatcher.scheduler.advanceUntilIdle()
+        testDispatcher.scheduler.runCurrent()
         assertTrue(engine.state.value.inSubScan)
         assertEquals(0, engine.state.value.selectedRowIndex)
         assertEquals(2, engine.state.value.items.size) // child items
@@ -247,7 +247,7 @@ class ScanningEngineTest {
         )
 
         engine.setItems(items)
-        testDispatcher.scheduler.advanceUntilIdle()
+        testDispatcher.scheduler.runCurrent()
 
         engine.onSwitchPressed(SwitchId.SWITCH_1) // select
         verify { feedbackManager.onItemSelected() }
@@ -280,7 +280,7 @@ class ScanningEngineTest {
         )
 
         engine.setItems(items)
-        testDispatcher.scheduler.advanceUntilIdle()
+        testDispatcher.scheduler.runCurrent()
 
         engine.onSwitchPressed(SwitchId.SWITCH_1)
         assertTrue(selected)

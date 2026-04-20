@@ -94,11 +94,11 @@ class SettingsViewModel @Inject constructor(
      * Verify PIN against stored hash. Returns true if PIN matches or no PIN is set.
      */
     fun verifyPin(pin: String): Boolean {
-        val stored = settings.value.settingsPinHash ?: return true
+        val stored = settingsRepository.currentSettings.settingsPinHash ?: return true
         return hashPin(pin) == stored
     }
 
-    fun isPinSet(): Boolean = settings.value.settingsPinHash != null
+    fun isPinSet(): Boolean = settingsRepository.currentSettings.settingsPinHash != null
 
     fun setPin(pin: String) = update { it.copy(settingsPinHash = hashPin(pin)) }
 
@@ -140,7 +140,11 @@ class SettingsViewModel @Inject constructor(
          * Get human-readable name for a keycode.
          */
         fun keycodeName(keycode: Int): String {
-            return KeyEvent.keyCodeToString(keycode)
+            val keycodeFieldName = KeyEvent::class.java.fields
+                .firstOrNull { it.name.startsWith("KEYCODE_") && it.get(null) as? Int == keycode }
+                ?.name
+                ?: return "Key $keycode"
+            return keycodeFieldName
                 .removePrefix("KEYCODE_")
                 .replace('_', ' ')
                 .lowercase()
