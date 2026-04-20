@@ -80,7 +80,7 @@ fun AccessSwitchTheme(content: @Composable () -> Unit) {
  * Routes:
  * - "home" — Main landing screen with status and settings button
  * - "settings" — Top-level settings menu
- * - "settings/*" — Detail settings screens
+ * - "settings/{screen}" — Detail settings screens
  */
 @Composable
 fun AppNavigation(startDestination: String = "home") {
