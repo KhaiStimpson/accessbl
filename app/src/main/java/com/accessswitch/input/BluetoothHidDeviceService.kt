@@ -248,9 +248,9 @@ class BluetoothHidDeviceService : Service() {
                         if (settings.phoneBtHidPairedDeviceAddress != address) {
                             // Update asynchronously
                             serviceScope.launch(Dispatchers.IO) {
-                                settingsRepository.updateSettings(
-                                    settings.copy(phoneBtHidPairedDeviceAddress = address)
-                                )
+                                settingsRepository.updateSettings { current ->
+                                    current.copy(phoneBtHidPairedDeviceAddress = address)
+                                }
                             }
                         }
                     }
