@@ -1,0 +1,83 @@
+name: Android Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: android-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      ACCESSSWITCH_SIGNING_STORE_FILE: ${{ runner.temp }}/accessswitch-release.keystore
+      ACCESSSWITCH_SIGNING_STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+      ACCESSSWITCH_SIGNING_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+      ACCESSSWITCH_SIGNING_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Accept Android SDK licenses
+        run: yes | sdkmanager --licenses > /dev/null
+
+      - name: Install Android SDK packages
+        run: sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x gradlew
+
+      - name: Decode release keystore
+        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+        shell: bash
+        run: |
+          printf '%s' "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > "$ACCESSSWITCH_SIGNING_STORE_FILE"
+
+      - name: Build release artifacts
+        run: |
+          ./gradlew \
+            assembleRelease \
+            bundleRelease \
+            -PACCESSSWITCH_SIGNING_STORE_FILE="$ACCESSSWITCH_SIGNING_STORE_FILE" \
+            -PACCESSSWITCH_SIGNING_STORE_PASSWORD="$ACCESSSWITCH_SIGNING_STORE_PASSWORD" \
+            -PACCESSSWITCH_SIGNING_KEY_ALIAS="$ACCESSSWITCH_SIGNING_KEY_ALIAS" \
+            -PACCESSSWITCH_SIGNING_KEY_PASSWORD="$ACCESSSWITCH_SIGNING_KEY_PASSWORD"
+
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: accessswitch-release-artifacts
+          path: |
+            app/build/outputs/apk/release/*.apk
+            app/build/outputs/bundle/release/*.aab
+          if-no-files-found: error
+
+      - name: Publish GitHub release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            app/build/outputs/apk/release/*.apk
+            app/build/outputs/bundle/release/*.aab

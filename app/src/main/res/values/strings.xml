@@ -1,0 +1,115 @@
+<resources>
+    <string name="app_name">AccessSwitch</string>
+
+    <!-- Accessibility Service -->
+    <string name="accessibility_service_description">
+        AccessSwitch uses this service to capture switch key events,
+        draw the scanning overlay, and control apps like Netflix
+        on your behalf. No personal data is collected or transmitted.
+    </string>
+
+    <!-- Main Menu -->
+    <string name="menu_phone">Phone</string>
+    <string name="menu_netflix">Netflix</string>
+    <string name="menu_nav">Navigate</string>
+    <string name="menu_notifications">Alerts</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_back">Back</string>
+
+    <!-- Switch Screen -->
+    <string name="switch_zone_next">NEXT ▶</string>
+    <string name="switch_zone_select">✓ SELECT</string>
+    <string name="switch_zone_single">TAP</string>
+    <string name="switch_screen_locked">Switch Screen is locked</string>
+    <string name="switch_screen_unlock_hint">Unlock in Settings to modify</string>
+
+    <!-- Phone -->
+    <string name="phone_end_call">End Call</string>
+    <string name="phone_answer">Answer</string>
+    <string name="phone_decline">Decline</string>
+    <string name="phone_mute">Mute</string>
+    <string name="phone_unmute">Unmute</string>
+    <string name="phone_speaker_on">Speaker On</string>
+    <string name="phone_speaker_off">Speaker Off</string>
+    <string name="phone_volume_up">Vol +</string>
+    <string name="phone_volume_down">Vol -</string>
+    <string name="phone_dialpad">Dialpad</string>
+    <string name="phone_back_to_menu">Back to Menu</string>
+    <string name="phone_calling">Calling…</string>
+    <string name="phone_call_ended">Call Ended</string>
+    <string name="phone_incoming_call">Incoming call from %s</string>
+    <string name="phone_not_available">Phone Not Available\non This Device</string>
+    <string name="phone_no_contacts">No contacts found</string>
+    <string name="phone_favourites">Favourites</string>
+    <string name="phone_permission_needed">Contacts and Phone permissions are required</string>
+
+    <!-- Nav -->
+    <string name="nav_home">Home</string>
+    <string name="nav_back">Back</string>
+    <string name="nav_recents">Recents</string>
+    <string name="nav_notifications">Notifications</string>
+    <string name="nav_quick_settings">Quick Settings</string>
+
+    <!-- Netflix -->
+    <string name="netflix_play_pause">Play/Pause</string>
+    <string name="netflix_forward">+10s</string>
+    <string name="netflix_rewind">-10s</string>
+    <string name="netflix_volume_up">Vol +</string>
+    <string name="netflix_volume_down">Vol -</string>
+    <string name="netflix_stop">Stop</string>
+    <string name="netflix_back_to_menu">Back to Menu</string>
+    <string name="netflix_up">Up</string>
+    <string name="netflix_down">Down</string>
+    <string name="netflix_left">Left</string>
+    <string name="netflix_right">Right</string>
+    <string name="netflix_select">Select</string>
+    <string name="netflix_back">Back</string>
+    <string name="netflix_open">Open Netflix</string>
+    <string name="netflix_toggle_mode">Toggle Mode</string>
+    <string name="netflix_browse_mode">Browse Mode</string>
+    <string name="netflix_playback_mode">Playback Mode</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_scan_mode">Scan Mode</string>
+    <string name="settings_scan_speed">Scan Speed</string>
+    <string name="settings_switch_config">Switch Configuration</string>
+    <string name="settings_phone_switch">Phone-as-Switch</string>
+    <string name="settings_bt_hid">Bluetooth Remote Mode</string>
+    <string name="settings_contacts">Favourite Contacts</string>
+    <string name="settings_appearance">Appearance</string>
+    <string name="settings_pin_lock">PIN Lock</string>
+    <string name="settings_switch_screen_lock">Lock Switch Screen</string>
+    <string name="settings_switch_screen_lock_desc">Prevent accidental mode changes while using</string>
+    <string name="settings_feedback">Feedback</string>
+
+    <!-- Status -->
+    <string name="status_switch_disconnected">Switch disconnected — scanning paused</string>
+    <string name="status_bt_hid_connected">Phone connected as switch</string>
+    <string name="status_bt_hid_disconnected">Phone switch not connected</string>
+    <string name="status_bt_hid_connecting">Connecting to paired device…</string>
+
+    <!-- Error states -->
+    <string name="error_bt_switch_disconnected">Bluetooth switch disconnected. Using phone zones.</string>
+    <string name="error_calling_unavailable">Phone calling is not available on this device.</string>
+    <string name="error_permission_required">Permission required: %s. Tap to open settings.</string>
+    <string name="error_bt_hid_unsupported">Bluetooth HID not supported on this device.</string>
+    <string name="error_switch_source_lost">Switch input lost. Check connection.</string>
+
+    <!-- Permissions -->
+    <string name="permission_contacts">Contacts</string>
+    <string name="permission_phone">Phone</string>
+    <string name="permission_bluetooth">Bluetooth</string>
+
+    <!-- Accessibility content descriptions -->
+    <string name="cd_scan_tile">Scannable item: %s</string>
+    <string name="cd_scan_tile_highlighted">Currently highlighted: %s</string>
+    <string name="cd_dismiss_error">Dismiss error message</string>
+    <string name="cd_settings_back">Go back</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_scanning">Scanning Service</string>
+    <string name="notification_scanning_active">AccessSwitch scanning is active</string>
+    <string name="notification_channel_bt_hid">Bluetooth HID Service</string>
+    <string name="notification_bt_hid_active">Phone is connected as a switch</string>
+</resources>
