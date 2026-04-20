@@ -42,21 +42,20 @@ class SwitchInputHub @Inject constructor(
         // so that this class remains testable in JVM unit tests (elapsedRealtime is an Android stub).
         // The debounce window is short (≤1 s) so wall-clock drift has no practical impact.
         val now = System.currentTimeMillis()
-        if (isDuplicate(switchId, now)) return
 
-        lastEventTime[switchId] = now
-
-        // Track that this source is active
+        // Always update connection tracking and clear any disconnect banner, even for
+        // debounced events — a source firing again means it has reconnected.
         val currentSources = _connectedSources.value
         if (source !in currentSources) {
             _connectedSources.value = currentSources + source
         }
-
-        // Clear any disconnect banner for this source
         if (_disconnectEvent.value == source) {
             _disconnectEvent.value = null
         }
 
+        if (isDuplicate(switchId, now)) return
+
+        lastEventTime[switchId] = now
         scanningEngine.onSwitchPressed(switchId)
     }
 
