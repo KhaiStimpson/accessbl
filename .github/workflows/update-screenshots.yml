@@ -7,6 +7,9 @@ concurrency:
   group: update-screenshots-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: write
+
 jobs:
   record:
     runs-on: ubuntu-latest

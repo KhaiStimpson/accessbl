@@ -27,20 +27,14 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
-import java.io.File
 
 /**
- * Screenshot directory relative to the module root (app/).
- * During record mode, Roborazzi writes to build/outputs/roborazzi/ using the basename;
- * the update-screenshots workflow then copies those files here so the README can reference them.
- * During verify mode (normal test run), captureRoboImage is a no-op.
+ * During `recordRoborazziDebug`, Roborazzi writes to `build/outputs/roborazzi/` using
+ * the basename of the path provided. The update-screenshots workflow then copies those
+ * files to `docs/screenshots/` so the README can reference them.
+ * During a normal test run (`testDebugUnitTest`), captureRoboImage is a no-op.
  */
-private val SCREENSHOT_DIR = File(
-    System.getProperty("user.dir")!!, "../docs/screenshots"
-).canonicalFile.also { it.mkdirs() }
-
-private fun screenshotPath(name: String) =
-    File(SCREENSHOT_DIR, "$name.png").absolutePath
+private fun screenshotPath(name: String) = "$name.png"
 
 private fun mockViewModel(settings: AppSettings = AppSettings()) =
     mockk<SettingsViewModel>(relaxed = true) {
