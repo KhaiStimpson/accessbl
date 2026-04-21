@@ -50,7 +50,7 @@ class CallControlManager @Inject constructor(
      * Uses TelecomManager.endCall() which is deprecated at API 29
      * but still works on current versions.
      */
-    @Suppress("DEPRECATION", "MissingPermission")
+    @Suppress("DEPRECATION", "MissingPermission", "NewApi")
     fun endCall() {
         try {
             telecomManager.endCall()

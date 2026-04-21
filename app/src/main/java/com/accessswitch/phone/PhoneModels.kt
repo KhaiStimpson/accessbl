@@ -31,5 +31,5 @@ sealed class CallState {
     object Ended : CallState()
 
     val isInCall: Boolean
-        get() = this is Ringing || this is Dialing || this is Active
+        get() = this is Active || this is Dialing
 }

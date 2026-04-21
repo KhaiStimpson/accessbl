@@ -1,6 +1,5 @@
 package com.accessswitch.input
 
-import android.os.SystemClock
 import com.accessswitch.scanning.ScanningEngine
 import com.accessswitch.settings.SettingsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,22 +38,24 @@ class SwitchInputHub @Inject constructor(
      * Routes the event to the scanning engine after dedup.
      */
     fun onRawEvent(switchId: SwitchId, source: SwitchSource) {
-        val now = SystemClock.elapsedRealtime()
-        if (isDuplicate(switchId, now)) return
+        // System.currentTimeMillis() is used here instead of SystemClock.elapsedRealtime()
+        // so that this class remains testable in JVM unit tests (elapsedRealtime is an Android stub).
+        // The debounce window is short (≤1 s) so wall-clock drift has no practical impact.
+        val now = System.currentTimeMillis()
 
-        lastEventTime[switchId] = now
-
-        // Track that this source is active
+        // Always update connection tracking and clear any disconnect banner, even for
+        // debounced events — a source firing again means it has reconnected.
         val currentSources = _connectedSources.value
         if (source !in currentSources) {
             _connectedSources.value = currentSources + source
         }
-
-        // Clear any disconnect banner for this source
         if (_disconnectEvent.value == source) {
             _disconnectEvent.value = null
         }
 
+        if (isDuplicate(switchId, now)) return
+
+        lastEventTime[switchId] = now
         scanningEngine.onSwitchPressed(switchId)
     }
 

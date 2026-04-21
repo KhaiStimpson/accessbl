@@ -1,9 +1,6 @@
 package com.accessswitch.util
 
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothHidDevice
 import android.bluetooth.BluetoothManager
-import android.bluetooth.BluetoothProfile
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
@@ -86,17 +83,12 @@ class DeviceCapabilities @Inject constructor(
         }
 
         // Check if HID Device profile is supported
-        // This is a synchronous check - the profile proxy callback would be more reliable
-        // but for a capability check we use the available API
-        val supported = try {
-            bluetoothAdapter.getProfileConnectionState(BluetoothProfile.HID_DEVICE) != BluetoothProfile.STATE_DISCONNECTED ||
-                true // If we can call this without exception, API is available
-        } catch (e: Exception) {
-            false
-        }
-
-        btHidSupported = supported
-        return supported
+        // BluetoothHidDevice is available on API 28+ when a Bluetooth adapter is present.
+        // getProfileConnectionState() was previously used here but requires BLUETOOTH_CONNECT
+        // permission on API 31+ and always returned true when no exception was thrown,
+        // so we simplify: API level + adapter presence is sufficient.
+        btHidSupported = true
+        return true
     }
 
     /**
