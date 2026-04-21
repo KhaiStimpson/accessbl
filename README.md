@@ -4,6 +4,35 @@ AccessSwitch is an Android accessibility app for users with motor impairments. I
 
 The app targets both Android phones and Chromebooks running Android apps.
 
+## Screenshots
+
+Screenshots are generated automatically from the UI via Roborazzi screenshot tests. Run the
+[Update Screenshots](../../actions/workflows/update-screenshots.yml) workflow to (re)generate them.
+
+### Mobile
+
+| Home | Settings | Scanning Overlay |
+|------|----------|-----------------|
+| ![Home](docs/screenshots/mobile_home.png) | ![Settings](docs/screenshots/mobile_settings.png) | ![Scanning overlay](docs/screenshots/mobile_scan_overlay.png) |
+
+| Phone Switch (Split) | Phone Switch (Full) | Scan Mode |
+|----------------------|---------------------|-----------|
+| ![Phone switch split](docs/screenshots/mobile_switch_screen.png) | ![Phone switch full](docs/screenshots/mobile_switch_screen_full.png) | ![Scan mode](docs/screenshots/mobile_scan_mode.png) |
+
+| Scan Speed | Appearance | Feedback | PIN Lock |
+|------------|------------|----------|---------|
+| ![Scan speed](docs/screenshots/mobile_scan_speed.png) | ![Appearance](docs/screenshots/mobile_appearance.png) | ![Feedback](docs/screenshots/mobile_feedback.png) | ![PIN lock](docs/screenshots/mobile_pin_lock.png) |
+
+### Chromebook
+
+| Home | Settings | Scanning Overlay |
+|------|----------|-----------------|
+| ![Home](docs/screenshots/chromebook_home.png) | ![Settings](docs/screenshots/chromebook_settings.png) | ![Scanning overlay](docs/screenshots/chromebook_scan_overlay.png) |
+
+| Phone Switch (Split) | Scan Mode | Appearance |
+|----------------------|-----------|------------|
+| ![Phone switch](docs/screenshots/chromebook_switch_screen.png) | ![Scan mode](docs/screenshots/chromebook_scan_mode.png) | ![Appearance](docs/screenshots/chromebook_appearance.png) |
+
 ## Features
 
 - Scanning overlay driven by one-switch or two-switch input
