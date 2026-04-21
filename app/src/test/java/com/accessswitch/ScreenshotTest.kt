@@ -34,7 +34,7 @@ import org.robolectric.annotation.GraphicsMode
  * files to `docs/screenshots/` so the README can reference them.
  * During a normal test run (`testDebugUnitTest`), captureRoboImage is a no-op.
  */
-private fun screenshotPath(name: String) = "$name.png"
+private fun screenshotPath(name: String) = "build/outputs/roborazzi/$name.png"
 
 private fun mockViewModel(settings: AppSettings = AppSettings()) =
     mockk<SettingsViewModel>(relaxed = true) {
