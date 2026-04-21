@@ -16,6 +16,7 @@ import com.accessswitch.scanning.ScanMode
 import com.accessswitch.switchscreen.SwitchZoneLayout
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -76,10 +77,7 @@ class SettingsRepository @Inject constructor(
     init {
         // Initialize cache synchronously on first load
         runBlocking {
-            context.dataStore.data.collect { prefs ->
-                _cachedSettings = mapPrefsToSettings(prefs)
-                return@collect
-            }
+            _cachedSettings = mapPrefsToSettings(context.dataStore.data.first())
         }
     }
 
