@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Core permissions -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -94,7 +95,8 @@
         <service
             android:name=".input.BluetoothHidDeviceService"
             android:exported="false"
-            android:foregroundServiceType="connectedDevice" />
+            android:foregroundServiceType="connectedDevice"
+            tools:targetApi="28" />
 
     </application>
 

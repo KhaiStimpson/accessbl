@@ -70,8 +70,8 @@ class SwitchScreenViewModel @Inject constructor(
         // Route to local input hub
         switchInputHub.onRawEvent(switchId, SwitchSource.PHONE_TOUCH_LOCAL)
 
-        // Also send via BT HID if enabled and connected
-        if (settings.phoneBtHidEnabled) {
+        // Also send via BT HID if enabled and connected (BluetoothHidDevice requires API 28+)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && settings.phoneBtHidEnabled) {
             val intent = Intent(context, BluetoothHidDeviceService::class.java).apply {
                 action = BluetoothHidDeviceService.ACTION_SEND_KEY
                 putExtra(
