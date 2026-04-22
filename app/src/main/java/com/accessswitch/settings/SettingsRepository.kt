@@ -14,11 +14,14 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.accessswitch.input.SwitchId
 import com.accessswitch.scanning.ScanMode
 import com.accessswitch.switchscreen.SwitchZoneLayout
+import com.accessswitch.util.StartupLogger
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -66,18 +69,35 @@ class SettingsRepository @Inject constructor(
     // Cached settings for fast synchronous access from onKeyEvent
     @Volatile
     private var _cachedSettings: AppSettings = AppSettings()
+    private var _settingsLoadedFromDisk = false
 
     /**
      * Synchronous read for use in non-coroutine contexts (e.g., onKeyEvent).
      * Returns the cached value — updated whenever DataStore emits.
+     * Defaults to AppSettings() until the first DataStore emission arrives.
      */
     val currentSettings: AppSettings
         get() = _cachedSettings
 
+    private val repositoryScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
     init {
-        // Initialize cache synchronously on first load
-        runBlocking {
-            _cachedSettings = mapPrefsToSettings(context.dataStore.data.first())
+        // Populate cache asynchronously so the main thread is never blocked.
+        // Uses AppSettings() defaults until the first DataStore emission arrives
+        // (typically within a few milliseconds).
+        StartupLogger.log("SettingsRepository: init — starting async DataStore load")
+        repositoryScope.launch {
+            try {
+                settingsFlow.collect { settings ->
+                    _cachedSettings = settings
+                    if (!_settingsLoadedFromDisk) {
+                        _settingsLoadedFromDisk = true
+                        StartupLogger.log("SettingsRepository: initial settings loaded from DataStore")
+                    }
+                }
+            } catch (e: Exception) {
+                StartupLogger.error("SettingsRepository: DataStore read failed", e)
+            }
         }
     }
 

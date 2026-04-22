@@ -42,12 +42,15 @@ import com.accessswitch.settings.ui.ScanModeScreen
 import com.accessswitch.settings.ui.ScanSpeedScreen
 import com.accessswitch.settings.ui.SettingsScreen
 import com.accessswitch.settings.ui.SwitchConfigScreen
+import com.accessswitch.util.DiagnosticsPanel
+import com.accessswitch.util.StartupLogger
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        StartupLogger.log("MainActivity: onCreate start")
 
         val startRoute = if (intent?.getStringExtra("navigate_to") == "settings") {
             "settings"
@@ -55,6 +58,7 @@ class MainActivity : ComponentActivity() {
             "home"
         }
 
+        StartupLogger.log("MainActivity: calling setContent (route=$startRoute)")
         setContent {
             AccessSwitchTheme {
                 Surface(
@@ -65,6 +69,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+        StartupLogger.log("MainActivity: onCreate complete")
     }
 }
 
@@ -178,10 +183,11 @@ fun HomeScreen(onOpenSettings: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black),
-        contentAlignment = Alignment.Center
+            .background(Color.Black)
     ) {
+        // Centred main content
         Column(
+            modifier = Modifier.align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -212,6 +218,13 @@ fun HomeScreen(onOpenSettings: () -> Unit) {
                 Text("Open Settings", color = Color.Black, fontSize = 16.sp)
             }
         }
+
+        // Diagnostics panel anchored to the bottom of the screen
+        DiagnosticsPanel(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(horizontal = 12.dp, vertical = 8.dp)
+        )
     }
 }
 
