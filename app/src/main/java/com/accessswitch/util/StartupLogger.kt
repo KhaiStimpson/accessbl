@@ -54,6 +54,6 @@ object StartupLogger {
     }
 
     fun clear() {
-        _entries.value = emptyList()
+        _entries.update { emptyList() }
     }
 }

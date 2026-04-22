@@ -69,6 +69,7 @@ class SettingsRepository @Inject constructor(
     // Cached settings for fast synchronous access from onKeyEvent
     @Volatile
     private var _cachedSettings: AppSettings = AppSettings()
+    @Volatile
     private var _settingsLoadedFromDisk = false
 
     /**
@@ -84,7 +85,9 @@ class SettingsRepository @Inject constructor(
     init {
         // Populate cache asynchronously so the main thread is never blocked.
         // Uses AppSettings() defaults until the first DataStore emission arrives
-        // (typically within a few milliseconds).
+        // (typically within a few milliseconds). The collection runs for the
+        // lifetime of the singleton scope, keeping _cachedSettings in sync with
+        // any subsequent DataStore writes (e.g., from updateSettings).
         StartupLogger.log("SettingsRepository: init — starting async DataStore load")
         repositoryScope.launch {
             try {
